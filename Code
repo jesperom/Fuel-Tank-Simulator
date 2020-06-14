@@ -1,0 +1,256 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+
+
+
+namespace FuelTankSim
+{
+    enum FuelTypes
+    {
+        Petrol,
+        Diesel,
+    };
+
+    public class BaseFuel
+
+    {
+        static float maxFuel = 35;                          // The full fuel tank contains 35 liters at most
+        static float currentFuel = 7;                       // The current fuel on start is 7 liters
+        public static float fuelConsumpt = 0.3f;            
+        static FuelTypes fuelTypes;
+        static float x = 0;
+        public virtual void ExtendedFuel() { }
+
+        public static void first()
+        {
+            {
+                Console.WriteLine("Welcome to this fuel tank simulator by Jesper Mulder");
+                Console.WriteLine("You can exit at any point using the 'esc' key");
+                Console.WriteLine("Press 'Any Key' to start");
+                Console.ReadKey();
+                Console.Clear();
+                second();
+            }
+        }
+
+        public static void second()
+        {
+            SwitchStatement1: string choice;
+            Console.ResetColor();
+            Console.WriteLine("Here you can decide what fuel type you wish to use");
+            Console.WriteLine("1. Petrol");
+            Console.WriteLine("2. Diesel");
+            Console.Write("choice: ");
+            choice = Console.ReadLine().ToLower();
+            Console.Clear();
+
+            switch (choice)
+            {
+                case "1":
+                case "petrol":
+                case "1. petrol":
+                    {
+                        Console.WriteLine("Your vehicle is succesfully running and refueled with petrol");
+                        fuelTypes = FuelTypes.Petrol;
+                        System.Threading.Thread.Sleep(2000);
+                        x += 1;
+                        break;
+
+
+
+                    }
+
+                case "2":
+                case "diesel":
+                case "2. diesel":
+                    {
+                        Console.WriteLine("Your vehicle is succesfully running and refueled with diesel");
+                        fuelTypes = FuelTypes.Diesel;
+                        System.Threading.Thread.Sleep(2000);
+                        x += 1;
+
+                        break;
+
+
+                    }
+            }
+            if (x < 1)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("You have answered an incorrect answer. Consider spellchecking you answer");
+                Console.WriteLine("Please try again");
+                goto SwitchStatement1;
+
+            }
+            while (true)
+            {
+                var instance = new ExtendedFuel();
+            }
+
+        }
+
+        public static void Update()
+        {
+            {
+                while (true)
+                {
+
+                    if (currentFuel >= 0)
+                    {
+                        Console.WriteLine("You have " + string.Format("{0:0.00}", currentFuel) + " liters in your tank");
+                        currentFuel = currentFuel -= fuelConsumpt;
+
+                        System.Threading.Thread.Sleep(1000);
+                    }
+
+                    x = 1;
+
+                    if (currentFuel < 0.3f)
+                    {
+                        SwitchStatement2: float liters;
+                        Console.Clear();
+                        Console.WriteLine("Your vehicle ran out of fuel");
+                        Console.WriteLine("You can now refuel up to " + maxFuel + " liters of " + fuelTypes);
+                        Console.WriteLine("How much " + fuelTypes + " would you like to get?");
+                        Console.Write("Liters: ");
+                        String litersanswer = Console.ReadLine();
+
+                        if (Regex.IsMatch(litersanswer, @"^\d+$"))
+                        {
+                            liters = float.Parse(litersanswer);
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("This is not an acceptable value. Make sure your value is between 0 and your maximum fuel");
+                            System.Threading.Thread.Sleep(4000);
+                            Console.ResetColor();
+                            goto SwitchStatement2;
+                        }
+                        liters = float.Parse(litersanswer);
+                        x = 0;
+
+
+                        while (currentFuel < liters)
+                        {
+
+                            if (liters >= 1 && liters <= maxFuel)
+                            {
+                                currentFuel += 0.01f;
+
+                                if (x < 1)
+                                {
+                                    Console.WriteLine("You have succesfully refueled " + liters + " liters of " + fuelTypes);
+                                    System.Threading.Thread.Sleep(5000);
+                                    Console.Clear();
+                                    x = 1;
+                                }
+
+                                continue;
+
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("The amount you requested is more than your fuel tank can hold");
+                                Console.WriteLine("Please try again");
+                                Console.WriteLine("Press 'Any Key' to continue");
+                                Console.ReadKey();
+                                Console.Clear();
+                                Console.ResetColor();
+                                goto SwitchStatement2;
+                            }
+
+
+
+
+                        }
+                    }
+                    continue;
+                }
+            }
+        }
+    }
+
+
+
+    public class ExtendedFuel : BaseFuel
+    {
+        public ExtendedFuel() : base()
+        {
+            string speed;
+            Console.ResetColor();
+            Console.WriteLine("What rate of speed would you like to drive at?");
+            Console.WriteLine("1. SLOW");
+            Console.WriteLine("2. NORMAL");
+            Console.WriteLine("3. FAST");
+            Console.Write("Speed: ");
+            speed = Console.ReadLine().ToLower();
+            Console.Clear();
+
+            switch (speed)
+            {
+                case "1":
+                case "slow":
+                case "1. slow":
+                    {
+                        Console.WriteLine("Your speed will be slow");
+                        fuelConsumpt = 0.2f;                        //When choosing slow speed the user will consume 0,2 liters per second
+                        System.Threading.Thread.Sleep(2000);
+                        break;
+
+
+
+                    }
+
+                case "2":
+                case "normal":
+                case "2. normal":
+                    {
+                        Console.WriteLine("Your speed will be normal");
+                        fuelConsumpt = 0.4f;                        //When choosing slow speed the user will consume 0,4 liters per second
+                        System.Threading.Thread.Sleep(2000);
+                        break;
+
+
+                    }
+
+                case "3":
+                case "fast":
+                case "3. fast":
+                    {
+                        Console.WriteLine("Your speed will be fast");
+                        fuelConsumpt = 0.6f;                        //When choosing slow speed the user will consume 0,6 liters per second
+                        System.Threading.Thread.Sleep(2000);
+                        break;
+
+
+                    }
+            }
+            while (true)
+            {
+                Update();
+            }
+        }
+    }
+
+    public class testclass
+    {
+        public static void Main(string[] args)
+        {
+            BaseFuel.first();
+        }
+    }
+}
+
+
+
+
+
+        
+    
+
